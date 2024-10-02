@@ -23,7 +23,7 @@ async function refreshToken() {
         body: authData
     });
     const data: any = await response.json();
-    accessToken = data.access_token;
+    return accessToken = data.access_token;
 }
 
 export async function createSetlist(setlist: any) {
@@ -86,11 +86,14 @@ async function spAddPlaylist(playlistId: string, trackId: string): Promise<void>
 export async function spGetPlaylist(playlistId: string) {
     await refreshToken();
     const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+        method: 'GET',
         headers: {
-            'Authorization': `Bearer ${accessToken}`
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
         }
     });
     return await response.json();
+    // return accessToken;  APIにアクセスするたびに違うトークンが返ってきているのでここは問題ない
 }
 
 export async function spModSearchSong(name: string, artist: string): Promise<any> {
